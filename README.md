@@ -1,5 +1,4 @@
 # Intelligent Student Support Agent
-**Agentic AI Engineering | Assignments 1 and 2**
 
 > **Demonstration notice:** All student identities, records, fee amounts, scholarships, tickets and handbook policies in this repository are fictional sample data. They are not official university records or regulations.
 
@@ -7,11 +6,11 @@
 
 The Intelligent Student Support Agent is a Flask-based application that helps students with common academic and administrative questions. Instead of following one fixed sequence, the agent decides for each message whether to answer directly, use a student-data tool, retrieve a relevant policy section, use an allowed memory item, prepare a support ticket, or ask the student for missing information.
 
-Assignment 2 extends the application with authenticated student and administrator roles, server-side authorization, student-data privacy controls, approval-based record changes, and an audit log.
+Task 2 extends the application with authenticated student and administrator roles, server-side authorization, student-data privacy controls, approval-based record changes, and an audit log.
 
 ## Main capabilities
 
-### Assignment 1 — Agent behaviour and observability
+### TASK 1 — Agent behaviour and observability
 
 - Framework-free ReAct-style agent loop using the Groq SDK and `openai/gpt-oss-20b` by default.
 - Tool calling for fee status, scholarship status, student records, support-ticket preparation, policy search and memory.
@@ -21,7 +20,7 @@ Assignment 2 extends the application with authenticated student and administrato
 - Structured execution traces with tool calls, retrieved evidence, memory references, latency, token usage and errors.
 - Golden-dataset evaluation and automated tests.
 
-### Assignment 2 — Identity, privacy and human approval
+### TASK 2 — Identity, privacy and human approval
 
 - Separate **Student Login** and **Admin Login** experiences.
 - Password hashes stored in SQLite; role-aware server-side route protection.
@@ -37,8 +36,6 @@ Assignment 2 extends the application with authenticated student and administrato
 The diagram below shows the main runtime components and the separation between the student and administrator interfaces.
 
 ![Student Support Agent architecture](architecture.png)
-
-Editable vector version: [architecture.svg](architecture.svg)
 
 ## Technology stack
 
