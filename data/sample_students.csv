@@ -1,0 +1,11 @@
+student_id,name,programme,course,semester,email,fee_total,fee_paid,fee_due_date,fee_status,fee_service,scholarship_name,scholarship_status,scholarship_updated,scholarship_note
+S1001,Aarav Mehta,PGDM,AI & DS,2,aarav.mehta@example.edu,450000,450000,2026-08-15,Paid,online,Merit Scholarship,Approved,2026-09-01,Approved for 20% tuition waiver.
+S1002,Diya Shah,PGDM,AI & DS,2,diya.shah@example.edu,450000,225000,2026-11-05,Partially Paid,online,Merit Scholarship,Under Review,2026-10-20,Documents verified; awaiting committee meeting.
+S1003,Rohan Iyer,PGDM,BDA,2,rohan.iyer@example.edu,450000,0,2026-10-10,Overdue,online,None,Not Applied,,No scholarship application on file.
+S1004,Meera Nair,PGDM,AI & DS,4,meera.nair@example.edu,450000,450000,2026-08-15,Paid,online,Need-Based Aid,Rejected,2026-09-12,Income documents incomplete at submission.
+S1005,Kabir Singh,PGDM,BDA,4,kabir.singh@example.edu,450000,300000,2026-11-20,Partially Paid,online,Need-Based Aid,Documents Pending,2026-10-18,Income certificate not yet uploaded.
+S1006,Ananya Rao,PGDM,AI & DS,2,ananya.rao@example.edu,450000,450000,2026-08-15,Paid,online,Sports Excellence Award,Approved,2026-09-05,Approved for 10% tuition waiver.
+S1007,Vihaan Patel,PGDM,BDA,2,vihaan.patel@example.edu,450000,150000,2026-10-25,Overdue,online,Merit Scholarship,Under Review,2026-10-15,Awaiting academic transcript verification.
+S1008,Ishita Desai,PGDM,AI & DS,4,ishita.desai@example.edu,450000,450000,2026-08-15,Paid,online,None,Not Applied,,No scholarship application on file.
+S1009,Arjun Kulkarni,PGDM,BDA,2,arjun.kulkarni@example.edu,450000,200000,2026-11-05,Pending,unavailable,Merit Scholarship,Submitted,2026-10-22,Application received; not yet reviewed.
+S1010,Sara Khan,PGDM,AI & DS,2,sara.khan@example.edu,450000,450000,2026-08-15,Paid,online,Merit Scholarship,Under Review,2026-10-21,Interview scheduled.

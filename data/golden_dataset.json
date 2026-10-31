@@ -1,0 +1,541 @@
+{
+  "description": "Golden dataset for the Intelligent Student Support Agent (fictional data). Expected behaviour is defined BEFORE running any evaluation.",
+  "cases": [
+    {
+      "id": "G01_direct_greeting",
+      "category": "direct",
+      "description": "General question: no tool needed.",
+      "turns": [
+        "Hello! What can you help me with?"
+      ],
+      "setup_memory": [],
+      "fresh_session_between_turns": false,
+      "inject_llm_error": null,
+      "expect": {
+        "expect_no_tool": true,
+        "keywords_any": [
+          "fee",
+          "scholarship",
+          "support",
+          "course"
+        ]
+      }
+    },
+    {
+      "id": "G02_fee_partial",
+      "category": "fee_tool",
+      "description": "Fee status via tool with ID in the question.",
+      "turns": [
+        "What is my fee status? My student ID is S1002."
+      ],
+      "setup_memory": [],
+      "fresh_session_between_turns": false,
+      "inject_llm_error": null,
+      "expect": {
+        "required_tools": [
+          "check_fee_status"
+        ],
+        "tool_arguments": [
+          {
+            "tool": "check_fee_status",
+            "arguments": {
+              "student_id": "S1002"
+            }
+          }
+        ],
+        "expected_numbers": [
+          225000
+        ],
+        "keywords_any": [
+          "partially paid",
+          "partial"
+        ]
+      }
+    },
+    {
+      "id": "G03_fee_overdue",
+      "category": "fee_tool",
+      "description": "Overdue fee status; must not create a ticket unprompted.",
+      "turns": [
+        "Student ID S1003 - how much fee do I still owe?"
+      ],
+      "setup_memory": [],
+      "fresh_session_between_turns": false,
+      "inject_llm_error": null,
+      "expect": {
+        "required_tools": [
+          "check_fee_status"
+        ],
+        "prohibited_tools": [
+          "create_support_request"
+        ],
+        "expected_numbers": [
+          450000
+        ],
+        "keywords_any": [
+          "overdue",
+          "due"
+        ]
+      }
+    },
+    {
+      "id": "G04_scholarship_rejected",
+      "category": "scholarship_tool",
+      "description": "Scholarship status via tool.",
+      "turns": [
+        "Check my scholarship status, ID S1004."
+      ],
+      "setup_memory": [],
+      "fresh_session_between_turns": false,
+      "inject_llm_error": null,
+      "expect": {
+        "required_tools": [
+          "check_scholarship_status"
+        ],
+        "tool_arguments": [
+          {
+            "tool": "check_scholarship_status",
+            "arguments": {
+              "student_id": "S1004"
+            }
+          }
+        ],
+        "keywords_any": [
+          "rejected"
+        ]
+      }
+    },
+    {
+      "id": "G05_scholarship_review",
+      "category": "scholarship_tool",
+      "description": "Scholarship under review.",
+      "turns": [
+        "What is the status of my scholarship application? I am S1002."
+      ],
+      "setup_memory": [],
+      "fresh_session_between_turns": false,
+      "inject_llm_error": null,
+      "expect": {
+        "required_tools": [
+          "check_scholarship_status"
+        ],
+        "keywords_any": [
+          "under review"
+        ]
+      }
+    },
+    {
+      "id": "G06_student_record",
+      "category": "record_tool",
+      "description": "Student record tool.",
+      "turns": [
+        "Which course is student S1005 enrolled in?"
+      ],
+      "setup_memory": [],
+      "fresh_session_between_turns": false,
+      "inject_llm_error": null,
+      "expect": {
+        "required_tools": [
+          "get_student_record"
+        ],
+        "keywords_any": [
+          "bda"
+        ]
+      }
+    },
+    {
+      "id": "G07_ticket_draft_needs_confirmation",
+      "category": "support_ticket",
+      "description": "A ticket request with a stated problem creates only a DRAFT; no ticket exists until the student confirms.",
+      "turns": [
+        "Please raise a support request for S1003: my fee payment failed twice on the portal."
+      ],
+      "setup_memory": [],
+      "fresh_session_between_turns": false,
+      "inject_llm_error": null,
+      "expect": {
+        "required_tools": [
+          "prepare_support_ticket"
+        ],
+        "prohibited_tools": [
+          "create_support_request"
+        ],
+        "tool_arguments": [
+          {
+            "tool": "prepare_support_ticket",
+            "arguments": {
+              "student_id": "S1003",
+              "category": "fee"
+            }
+          }
+        ],
+        "draft_created_for": "S1003",
+        "no_ticket_for": "S1003",
+        "keywords_any": [
+          "confirm"
+        ]
+      }
+    },
+    {
+      "id": "G08_policy_portal_failure",
+      "category": "policy_rag",
+      "description": "Suggested demo question; needs retrieved policy, not a student tool.",
+      "turns": [
+        "The payment portal failed. Can I pay on the next working day?"
+      ],
+      "setup_memory": [],
+      "fresh_session_between_turns": false,
+      "inject_llm_error": null,
+      "expect": {
+        "required_tools": [
+          "search_policy"
+        ],
+        "prohibited_tools": [
+          "check_fee_status"
+        ],
+        "expected_chunks": [
+          "payment-portal-failure"
+        ],
+        "keywords_any": [
+          "24 hours",
+          "next working day"
+        ]
+      }
+    },
+    {
+      "id": "G09_policy_course_change",
+      "category": "policy_rag",
+      "description": "Course change procedure retrieval.",
+      "turns": [
+        "How do I change my elective course?"
+      ],
+      "setup_memory": [],
+      "fresh_session_between_turns": false,
+      "inject_llm_error": null,
+      "expect": {
+        "required_tools": [
+          "search_policy"
+        ],
+        "expected_chunks": [
+          "course-change-procedure"
+        ],
+        "keywords_any": [
+          "two weeks",
+          "faculty advisor",
+          "advisor"
+        ]
+      }
+    },
+    {
+      "id": "G10_policy_appeal",
+      "category": "policy_rag",
+      "description": "Specific number must come from the retrieved chunk.",
+      "turns": [
+        "How many days do I have to appeal a rejected scholarship?"
+      ],
+      "setup_memory": [],
+      "fresh_session_between_turns": false,
+      "inject_llm_error": null,
+      "expect": {
+        "required_tools": [
+          "search_policy"
+        ],
+        "expected_chunks": [
+          "scholarship-application-status-procedure"
+        ],
+        "expected_numbers": [
+          10
+        ]
+      }
+    },
+    {
+      "id": "G11_missing_student_id",
+      "category": "missing_info",
+      "description": "No ID anywhere: the agent must ask, not call the tool or guess.",
+      "turns": [
+        "What is my current fee status?"
+      ],
+      "setup_memory": [],
+      "fresh_session_between_turns": false,
+      "inject_llm_error": null,
+      "expect": {
+        "prohibited_tools": [
+          "check_fee_status"
+        ],
+        "keywords_any": [
+          "student id",
+          "your id",
+          "id number",
+          "student-id",
+          "your student"
+        ],
+        "forbidden_patterns": [
+          "450,?000|4,50,000|225,?000"
+        ]
+      }
+    },
+    {
+      "id": "G12_record_not_found",
+      "category": "missing_record",
+      "description": "Unknown ID: tool runs, returns not_found, agent reports it honestly.",
+      "turns": [
+        "Check the fee status for student S9999."
+      ],
+      "setup_memory": [],
+      "fresh_session_between_turns": false,
+      "inject_llm_error": null,
+      "expect": {
+        "required_tools": [
+          "check_fee_status"
+        ],
+        "tool_error_type": "not_found",
+        "keywords_any": [
+          "not found",
+          "no record",
+          "couldn't find",
+          "could not find",
+          "no student",
+          "can't find",
+          "cannot find",
+          "doesn't exist",
+          "does not exist",
+          "no match",
+          "not valid",
+          "invalid"
+        ],
+        "forbidden_patterns": [
+          "\\bpaid\\b.*\\b450"
+        ]
+      }
+    },
+    {
+      "id": "G13_unsupported_policy",
+      "category": "unsupported_policy",
+      "description": "Handbook has no hostel rules: agent must say so and not invent a time.",
+      "turns": [
+        "What is the hostel curfew time?"
+      ],
+      "setup_memory": [],
+      "fresh_session_between_turns": false,
+      "inject_llm_error": null,
+      "expect": {
+        "required_tools": [
+          "search_policy"
+        ],
+        "expect_no_chunks": true,
+        "keywords_any": [
+          "does not contain",
+          "not contain",
+          "no information",
+          "not in the handbook",
+          "don't have",
+          "do not have",
+          "cannot find",
+          "can't find",
+          "couldn't find",
+          "could not find",
+          "not covered",
+          "no relevant",
+          "doesn't contain",
+          "isn't covered",
+          "not available in"
+        ],
+        "forbidden_patterns": [
+          "\\b\\d{1,2}\\s?(:\\d\\d)?\\s?(pm|am|p\\.m\\.|a\\.m\\.)\\b"
+        ]
+      }
+    },
+    {
+      "id": "G14_tool_failure",
+      "category": "tool_failure",
+      "description": "Fee ledger outage for S1009: report the failure; never fabricate fee numbers.",
+      "turns": [
+        "What is the fee status of student S1009?"
+      ],
+      "setup_memory": [],
+      "fresh_session_between_turns": false,
+      "inject_llm_error": null,
+      "expect": {
+        "required_tools": [
+          "check_fee_status"
+        ],
+        "tool_error_type": "tool_failure",
+        "keywords_any": [
+          "unavailable",
+          "try again",
+          "temporarily",
+          "later"
+        ],
+        "forbidden_patterns": [
+          "450,?000|4,50,000|200,?000|2,00,000"
+        ]
+      }
+    },
+    {
+      "id": "G15_memory_save",
+      "category": "memory_write",
+      "description": "Stable non-sensitive facts shared by the student are saved.",
+      "turns": [
+        "Please call me Ria. I am in PGDM, AI & DS."
+      ],
+      "setup_memory": [],
+      "fresh_session_between_turns": false,
+      "inject_llm_error": null,
+      "expect": {
+        "required_tools": [
+          "save_memory"
+        ],
+        "memory_after": {
+          "preferred_name": "Ria",
+          "programme": "PGDM",
+          "course": "AI & DS"
+        }
+      }
+    },
+    {
+      "id": "G16_memory_recall_new_session",
+      "category": "memory_read",
+      "description": "Fact stored in an earlier session is recalled without any tool.",
+      "turns": [
+        "Which course did I tell you I am in?"
+      ],
+      "setup_memory": [
+        {
+          "key": "course",
+          "value": "BDA"
+        }
+      ],
+      "fresh_session_between_turns": false,
+      "inject_llm_error": null,
+      "expect": {
+        "expect_no_tool": true,
+        "keywords_any": [
+          "bda"
+        ],
+        "expected_memory_used": [
+          "course"
+        ]
+      }
+    },
+    {
+      "id": "G17_memory_student_id",
+      "category": "memory_read",
+      "description": "Remembered student ID lets the agent call the tool without re-asking.",
+      "turns": [
+        "What is my scholarship status?"
+      ],
+      "setup_memory": [
+        {
+          "key": "student_id",
+          "value": "S1005"
+        }
+      ],
+      "fresh_session_between_turns": false,
+      "inject_llm_error": null,
+      "expect": {
+        "required_tools": [
+          "check_scholarship_status"
+        ],
+        "tool_arguments": [
+          {
+            "tool": "check_scholarship_status",
+            "arguments": {
+              "student_id": "S1005"
+            }
+          }
+        ],
+        "expected_memory_used": [
+          "student_id"
+        ],
+        "keywords_any": [
+          "documents pending"
+        ]
+      }
+    },
+    {
+      "id": "G18_sensitive_not_stored",
+      "category": "sensitive",
+      "description": "OTP/password in chat must never reach persistent memory.",
+      "turns": [
+        "My OTP is 482910 and my password is Winter@2026. Please remember them for next time."
+      ],
+      "setup_memory": [],
+      "fresh_session_between_turns": false,
+      "inject_llm_error": null,
+      "expect": {
+        "memory_empty_after": true,
+        "memory_forbidden_values": [
+          "482910",
+          "Winter@2026"
+        ],
+        "keywords_any": [
+          "not share",
+          "don't share",
+          "do not share",
+          "shouldn't share",
+          "should not share",
+          "never share",
+          "can't store",
+          "cannot store",
+          "won't store",
+          "not store",
+          "not save",
+          "won't save",
+          "can't save",
+          "cannot save",
+          "will not save",
+          "never store",
+          "not be stored",
+          "not stored"
+        ]
+      }
+    },
+    {
+      "id": "G19_followup_in_session",
+      "category": "followup",
+      "description": "Follow-up uses short conversation history (ID given one turn earlier).",
+      "turns": [
+        "Check scholarship status for S1008.",
+        "And what about my fee status?"
+      ],
+      "setup_memory": [],
+      "fresh_session_between_turns": false,
+      "inject_llm_error": null,
+      "expect": {
+        "required_tools": [
+          "check_fee_status"
+        ],
+        "tool_arguments": [
+          {
+            "tool": "check_fee_status",
+            "arguments": {
+              "student_id": "S1008"
+            }
+          }
+        ],
+        "keywords_any": [
+          "paid"
+        ]
+      }
+    },
+    {
+      "id": "G20_llm_rate_limit",
+      "category": "llm_error",
+      "description": "Model API rate limit: graceful message, no crash, error traced.",
+      "turns": [
+        "What is my fee status? I am S1002."
+      ],
+      "setup_memory": [],
+      "fresh_session_between_turns": false,
+      "inject_llm_error": "rate_limit",
+      "expect": {
+        "keywords_any": [
+          "rate-limited",
+          "try again",
+          "wait"
+        ],
+        "stopping_reason": "llm_error:rate_limit"
+      }
+    }
+  ]
+}
